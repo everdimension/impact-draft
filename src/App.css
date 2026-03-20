@@ -5,6 +5,25 @@
   padding: 40px 20px 80px;
 }
 
+.navbar {
+  display: flex;
+  gap: 24px;
+  margin: -24px 0 24px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+.nav-link {
+  font-size: 14px;
+  color: var(--text);
+  text-decoration: none;
+}
+.nav-link:hover {
+  color: var(--text-h);
+}
+.nav-link-active {
+  color: var(--text-h);
+  font-weight: 600;
+}
 header {
   margin-bottom: 32px;
 }
@@ -88,18 +107,6 @@ header h1 {
 }
 
 /* ---- Results ---- */
-.results-header {
-  margin-bottom: 20px;
-}
-.results-header h2 {
-  font-size: 20px;
-  margin: 0 0 4px;
-}
-.results-note {
-  font-size: 14px;
-  color: var(--text);
-  margin: 0;
-}
 
 /* ---- Impact Chart ---- */
 .impact-chart { margin-bottom: 20px; }
