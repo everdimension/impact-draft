@@ -28,6 +28,22 @@ function getDominantCategory(
   return categoryLabels[dominant];
 }
 
+function getSummaryNote(report: EngineerReport): string {
+  const ratio = report.featureQuality.ratio;
+  const avgMod = report.architecturalQuality.avgModulesPerPR;
+
+  // Strong positive signals
+  if (ratio !== null && ratio >= 2.0) return "High quality features";
+  if (avgMod !== null && avgMod <= 1.3) return "Clean architecture";
+
+  // Strong negative signals
+  if (ratio !== null && ratio < 0.5) return "Bug-prone features";
+  if (avgMod !== null && avgMod >= 3.0) return "Scattered architecture";
+
+  // Neutral
+  return `mostly ${getDominantCategory(report.prsByCategory)}`;
+}
+
 export function EngineerCard({ report, rank }: { report: EngineerReport; rank: number }) {
   const [open, setOpen] = useState(false);
 
@@ -57,8 +73,7 @@ export function EngineerCard({ report, rank }: { report: EngineerReport; rank: n
             {report.login}
           </a>
           <span className="pr-summary">
-            {report.totalPRs} PRs &mdash; mostly{" "}
-            {getDominantCategory(report.prsByCategory)}
+            {report.totalPRs} PRs &middot; {getSummaryNote(report)}
           </span>
         </div>
         <div className="metric-chips">
