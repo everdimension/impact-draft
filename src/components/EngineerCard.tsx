@@ -28,7 +28,7 @@ function getDominantCategory(
   return categoryLabels[dominant];
 }
 
-export function EngineerCard({ report }: { report: EngineerReport }) {
+export function EngineerCard({ report, rank }: { report: EngineerReport; rank: number }) {
   const [open, setOpen] = useState(false);
 
   const qualityRatio = report.featureQuality.ratio;
@@ -38,6 +38,7 @@ export function EngineerCard({ report }: { report: EngineerReport }) {
   return (
     <div className="engineer-card" data-login={report.login}>
       <button className="engineer-header" onClick={() => setOpen(!open)}>
+        <span className="engineer-rank">{rank}</span>
         <img
           className="avatar"
           src={report.avatarUrl}

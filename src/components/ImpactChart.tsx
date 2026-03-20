@@ -38,6 +38,7 @@ export function ImpactChart({ reports }: { reports: EngineerReport[] }) {
     <div className="impact-chart">
       {/* Axis */}
       <div className="chart-row chart-axis">
+        <span className="chart-rank" />
         <div className="chart-avatar-spacer" />
         <div className="chart-axis-labels">
           <span className="chart-axis-label" style={{ left: 0 }}>0</span>
@@ -48,10 +49,11 @@ export function ImpactChart({ reports }: { reports: EngineerReport[] }) {
       </div>
 
       {/* Rows */}
-      {visibleReports.map((r) => {
+      {visibleReports.map((r, i) => {
         const ratio = r.featureQuality.ratio;
         return (
           <div key={r.login} className="chart-row" data-login={r.login}>
+            <span className="chart-rank">{i + 1}</span>
             <div className="chart-avatar-group">
               <img
                 className="chart-avatar"

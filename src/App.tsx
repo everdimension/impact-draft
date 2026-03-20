@@ -66,8 +66,8 @@ function App() {
           >
             <ImpactChart reports={reports} />
             <div className="engineer-list">
-              {reports.map((r: EngineerReport) => (
-                <EngineerCard key={r.login} report={r} />
+              {reports.map((r: EngineerReport, i: number) => (
+                <EngineerCard key={r.login} report={r} rank={i + 1} />
               ))}
             </div>
           </div>

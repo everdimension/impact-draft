@@ -114,6 +114,14 @@ header h1 {
 .chart-row.row-highlight {
   background: var(--code-bg);
 }
+.chart-rank {
+  width: 18px;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.4;
+  text-align: right;
+}
 .chart-avatar-spacer { width: 22px; flex-shrink: 0; }
 .chart-value-spacer { width: 38px; flex-shrink: 0; }
 .chart-axis-labels {
@@ -227,6 +235,15 @@ header h1 {
 }
 .engineer-card.row-highlight {
   background: var(--code-bg);
+}
+.engineer-rank {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  width: 20px;
+  margin-right: 4px;
+  text-align: right;
+  flex-shrink: 0;
 }
 .engineer-header {
   display: flex;
