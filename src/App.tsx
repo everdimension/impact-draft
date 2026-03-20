@@ -34,11 +34,13 @@ function App() {
               evidence.
             </p>
           </div>
-          <ImpactChart reports={reports} />
-          <div className="engineer-list">
-            {reports.map((r: EngineerReport) => (
-              <EngineerCard key={r.login} report={r} />
-            ))}
+          <div className="results-body">
+            <ImpactChart reports={reports} />
+            <div className="engineer-list">
+              {reports.map((r: EngineerReport) => (
+                <EngineerCard key={r.login} report={r} />
+              ))}
+            </div>
           </div>
         </section>
       )}

@@ -103,7 +103,36 @@ header h1 {
 
 /* ---- Impact Chart ---- */
 .impact-chart { margin-bottom: 20px; }
-.impact-chart svg { display: block; width: 100%; height: auto; }
+.impact-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 600px;
+}
+.chart-tooltip {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s;
+}
+.chart-avatar-group:hover .chart-tooltip {
+  opacity: 1;
+}
+.chart-expand-btn {
+  display: block;
+  max-width: 600px;
+  padding: 6px 0;
+  margin-top: 4px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+}
+.chart-expand-btn:hover {
+  background: var(--code-bg);
+  color: var(--text-h);
+}
 
 /* ---- Engineer Card ---- */
 .engineer-card {
@@ -341,6 +370,33 @@ h5 {
 }
 
 /* ---- Responsive ---- */
+@media (min-width: 1200px) {
+  .app {
+    max-width: 1400px;
+  }
+  .results-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .impact-chart {
+    flex: 0 0 500px;
+    position: sticky;
+    top: 20px;
+    margin-bottom: 0;
+  }
+  .impact-chart svg {
+    max-width: none;
+  }
+  .chart-expand-btn {
+    max-width: none;
+  }
+  .engineer-list {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
 @media (max-width: 640px) {
   .control-row {
     flex-direction: column;
