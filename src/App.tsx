@@ -1,205 +1,121 @@
-import { useEffect, useState } from "react";
+import { useCallback, useRef, useState } from "react";
+import { fetchAllPRsWithFiles } from "./api/github";
+import type { RawPRWithFiles } from "./api/github";
+import { analyzeAll } from "./analysis";
+import type { EngineerReport } from "./analysis/types";
+import { EngineerCard } from "./components/EngineerCard";
 import "./App.css";
 
-const REPO = "PostHog/posthog";
-
-interface Contributor {
-  login: string;
-  avatar_url: string;
-  html_url: string;
-  pr_count: number;
-}
-
-interface PRAuthor {
-  login: string;
-  avatar_url: string;
-  html_url: string;
-}
-
-interface PullRequest {
-  number: number;
-  user: PRAuthor | null;
-}
-
-async function fetchAllMergedPRs(
-  signal: AbortSignal
-): Promise<Map<string, Contributor>> {
-  const contributors = new Map<string, Contributor>();
-  let page = 1;
-  const perPage = 100;
-  const maxPages = 10; // 1000 PRs max to stay within API limits
-
-  while (page <= maxPages) {
-    const url = `https://api.github.com/repos/${REPO}/pulls?state=closed&sort=updated&direction=desc&per_page=${perPage}&page=${page}`;
-    const res = await fetch(url, { signal });
-    if (!res.ok) {
-      if (res.status === 403) {
-        // Rate limited - return what we have
-        break;
-      }
-      throw new Error(`GitHub API error: ${res.status}`);
-    }
-    const prs: PullRequest[] = await res.json();
-    if (prs.length === 0) break;
-
-    for (const pr of prs) {
-      if (!pr.user) continue;
-      const login = pr.user.login;
-      const existing = contributors.get(login);
-      if (existing) {
-        existing.pr_count++;
-      } else {
-        contributors.set(login, {
-          login,
-          avatar_url: pr.user.avatar_url,
-          html_url: pr.user.html_url,
-          pr_count: 1,
-        });
-      }
-    }
-
-    page++;
-  }
-
-  return contributors;
-}
-
-type SortField = "pr_count" | "login";
-type SortDirection = "asc" | "desc";
+const DEFAULT_REPO = "PostHog/posthog";
+const DEFAULT_MAX_PRS = 300;
 
 function App() {
-  const [contributors, setContributors] = useState<Contributor[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [repo, setRepo] = useState(DEFAULT_REPO);
+  const [token, setToken] = useState("");
+  const [maxPRs, setMaxPRs] = useState(DEFAULT_MAX_PRS);
+  const [progress, setProgress] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [totalPRs, setTotalPRs] = useState(0);
-  const [sortField, setSortField] = useState<SortField>("pr_count");
-  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const [reports, setReports] = useState<EngineerReport[] | null>(null);
+  const [rawCount, setRawCount] = useState(0);
+  const abortRef = useRef<AbortController | null>(null);
 
-  useEffect(() => {
+  const analyze = useCallback(async () => {
+    abortRef.current?.abort();
     const controller = new AbortController();
-    fetchAllMergedPRs(controller.signal)
-      .then((map) => {
-        const list = Array.from(map.values());
-        setContributors(list);
-        setTotalPRs(list.reduce((sum, c) => sum + c.pr_count, 0));
-        setLoading(false);
-      })
-      .catch((err) => {
-        if (err.name !== "AbortError") {
-          setError(err.message);
-          setLoading(false);
-        }
+    abortRef.current = controller;
+
+    setError(null);
+    setReports(null);
+    setProgress("Starting...");
+
+    try {
+      const prs: RawPRWithFiles[] = await fetchAllPRsWithFiles(repo, maxPRs, {
+        token: token || undefined,
+        signal: controller.signal,
+        onProgress: setProgress,
       });
-    return () => controller.abort();
-  }, []);
-
-  const sorted = [...contributors].sort((a, b) => {
-    const dir = sortDirection === "asc" ? 1 : -1;
-    if (sortField === "pr_count") return (a.pr_count - b.pr_count) * dir;
-    return a.login.localeCompare(b.login) * dir;
-  });
-
-  function toggleSort(field: SortField) {
-    if (sortField === field) {
-      setSortDirection((d) => (d === "asc" ? "desc" : "asc"));
-    } else {
-      setSortField(field);
-      setSortDirection(field === "pr_count" ? "desc" : "asc");
+      setRawCount(prs.length);
+      setProgress("Analyzing...");
+      // Run analysis synchronously (fast, all in-memory)
+      const results = analyzeAll(prs);
+      setReports(results);
+      setProgress(null);
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === "AbortError") return;
+      setError(err instanceof Error ? err.message : String(err));
+      setProgress(null);
     }
-  }
-
-  function sortIndicator(field: SortField) {
-    if (sortField !== field) return "";
-    return sortDirection === "asc" ? " ↑" : " ↓";
-  }
+  }, [repo, token, maxPRs]);
 
   return (
     <div className="app">
       <header>
-        <h1>Engineering Impact Dashboard</h1>
+        <h1>Engineering Impact Analysis</h1>
         <p className="subtitle">
-          <a
-            href={`https://github.com/${REPO}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {REPO}
-          </a>
+          Analyze engineer contributions beyond lines of code
         </p>
       </header>
 
-      {loading && <div className="loading">Loading PR data from GitHub...</div>}
-      {error && <div className="error">Error: {error}</div>}
+      <section className="controls">
+        <div className="control-row">
+          <label>
+            Repository
+            <input
+              type="text"
+              value={repo}
+              onChange={(e) => setRepo(e.target.value)}
+              placeholder="owner/repo"
+            />
+          </label>
+          <label>
+            Max PRs
+            <input
+              type="number"
+              value={maxPRs}
+              onChange={(e) => setMaxPRs(Number(e.target.value))}
+              min={10}
+              max={1000}
+              step={50}
+            />
+          </label>
+        </div>
+        <div className="control-row">
+          <label className="token-label">
+            GitHub Token{" "}
+            <span className="hint">(recommended — 60 req/hr without)</span>
+            <input
+              type="password"
+              value={token}
+              onChange={(e) => setToken(e.target.value)}
+              placeholder="ghp_..."
+            />
+          </label>
+        </div>
+        <button className="analyze-btn" onClick={analyze} disabled={!!progress}>
+          {progress ? progress : "Analyze"}
+        </button>
+      </section>
 
-      {!loading && !error && (
-        <>
-          <div className="stats">
-            <div className="stat-card">
-              <div className="stat-value">{totalPRs.toLocaleString()}</div>
-              <div className="stat-label">Total PRs (recent)</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-value">{contributors.length}</div>
-              <div className="stat-label">Contributors</div>
-            </div>
+      {error && <div className="error-box">{error}</div>}
+
+      {reports && (
+        <section className="results">
+          <div className="results-header">
+            <h2>
+              Results — {reports.length} engineers from {rawCount} merged PRs
+            </h2>
+            <p className="results-note">
+              Click an engineer to expand their impact report. Each metric
+              section shows the methodology and links to specific PRs as
+              evidence.
+            </p>
           </div>
-
-          <table className="contributors-table">
-            <thead>
-              <tr>
-                <th className="rank-col">#</th>
-                <th
-                  className="sortable"
-                  onClick={() => toggleSort("login")}
-                >
-                  Contributor{sortIndicator("login")}
-                </th>
-                <th
-                  className="sortable num-col"
-                  onClick={() => toggleSort("pr_count")}
-                >
-                  PRs{sortIndicator("pr_count")}
-                </th>
-                <th className="bar-col">Distribution</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sorted.map((c, i) => {
-                const maxPRs = Math.max(...contributors.map((x) => x.pr_count));
-                const barWidth = (c.pr_count / maxPRs) * 100;
-                return (
-                  <tr key={c.login}>
-                    <td className="rank-col">{i + 1}</td>
-                    <td>
-                      <a
-                        className="contributor-link"
-                        href={c.html_url}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <img
-                          className="avatar"
-                          src={c.avatar_url}
-                          alt=""
-                          width={28}
-                          height={28}
-                        />
-                        {c.login}
-                      </a>
-                    </td>
-                    <td className="num-col">{c.pr_count}</td>
-                    <td className="bar-col">
-                      <div
-                        className="bar"
-                        style={{ width: `${barWidth}%` }}
-                      />
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </>
+          <div className="engineer-list">
+            {reports.map((r) => (
+              <EngineerCard key={r.login} report={r} />
+            ))}
+          </div>
+        </section>
       )}
     </div>
   );
