@@ -141,6 +141,12 @@ header h1 {
   margin-bottom: 8px;
   overflow: hidden;
 }
+.engineer-card.row-highlight {
+  background: var(--code-bg);
+}
+.row-highlight > .chart-row-bg {
+  opacity: 0.07 !important;
+}
 .engineer-header {
   display: flex;
   align-items: center;

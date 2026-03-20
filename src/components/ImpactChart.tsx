@@ -118,7 +118,17 @@ export function ImpactChart({ reports }: { reports: EngineerReport[] }) {
           const tooltipW = tooltipText.length * 6.6 + 10;
 
           return (
-            <g key={r.login}>
+            <g key={r.login} data-login={r.login}>
+              <rect
+                className="chart-row-bg"
+                x={0}
+                y={y}
+                width={SVG_W}
+                height={ROW_H}
+                fill="var(--text)"
+                opacity={0}
+                rx={3}
+              />
               {/* Avatar + tooltip */}
               <g className="chart-avatar-group">
                 <image

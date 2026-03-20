@@ -36,7 +36,7 @@ export function EngineerCard({ report }: { report: EngineerReport }) {
   const avgModules = report.architecturalQuality.avgModulesPerPR;
 
   return (
-    <div className="engineer-card">
+    <div className="engineer-card" data-login={report.login}>
       <button className="engineer-header" onClick={() => setOpen(!open)}>
         <img
           className="avatar"

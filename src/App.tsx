@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import type { RawPRWithFiles } from "./api/github";
 import { analyzeAll } from "./analysis";
 import type { EngineerReport } from "./analysis/types";
@@ -11,6 +11,30 @@ function App() {
   const { reports, rawCount } = useMemo(() => {
     const prs = cachedPRs as unknown as RawPRWithFiles[];
     return { reports: analyzeAll(prs), rawCount: prs.length };
+  }, []);
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const handleHover = useCallback((e: React.MouseEvent) => {
+    const container = resultsRef.current;
+    if (!container) return;
+    const target = (e.target as Element).closest("[data-login]");
+    for (const el of container.querySelectorAll(".row-highlight")) {
+      el.classList.remove("row-highlight");
+    }
+    if (target) {
+      const login = target.getAttribute("data-login");
+      for (const el of container.querySelectorAll(
+        `[data-login="${login}"]`,
+      )) {
+        el.classList.add("row-highlight");
+      }
+    }
+  }, []);
+  const clearHover = useCallback(() => {
+    const container = resultsRef.current;
+    if (!container) return;
+    for (const el of container.querySelectorAll(".row-highlight")) {
+      el.classList.remove("row-highlight");
+    }
   }, []);
 
   return (
@@ -34,7 +58,12 @@ function App() {
               evidence.
             </p>
           </div>
-          <div className="results-body">
+          <div
+            className="results-body"
+            ref={resultsRef}
+            onMouseOver={handleHover}
+            onMouseOut={clearHover}
+          >
             <ImpactChart reports={reports} />
             <div className="engineer-list">
               {reports.map((r: EngineerReport) => (
