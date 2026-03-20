@@ -75,7 +75,41 @@ function App() {
             </>
           }
         />
-        <Route path="/about" element={<div className="about-page" />} />
+        <Route
+          path="/about"
+          element={
+            <div className="about-page">
+              <h1>About</h1>
+
+              <h2>What this measures</h2>
+              <p>
+                Impact is measured by two main factors: <strong>feature quality</strong> and{" "}
+                <strong>code architecture quality</strong>.
+              </p>
+              <p>
+                Feature quality is defined by the bugfixes and regressions a
+                feature produced — lower is better. Architecture quality is
+                defined by analyzing adherence to two principles:{" "}
+                <strong>high cohesion</strong> and <strong>loose coupling</strong>.
+                I've used these criteria in my own team (conventionally, as a
+                verbal contract) to define quality of PRs.
+              </p>
+
+              <h2>Out of scope</h2>
+              <p>
+                No AI model was used to analyze whether code is a feature or to
+                evaluate architecture. Instead, the analysis relies on commit
+                conventions and the file dependency graph. Consider the results a
+                demo and not true scoring data.
+              </p>
+
+              <h2>In scope</h2>
+              <p>
+                Quickly see and compare the impact of contributors at a glance.
+              </p>
+            </div>
+          }
+        />
       </Routes>
     </div>
   );

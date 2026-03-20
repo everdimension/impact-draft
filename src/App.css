@@ -106,6 +106,24 @@ header h1 {
   font-size: 14px;
 }
 
+/* ---- About ---- */
+.about-page {
+  max-width: 640px;
+  line-height: 1.6;
+}
+.about-page h1 {
+  font-size: 28px;
+  margin: 0 0 24px;
+}
+.about-page h2 {
+  font-size: 18px;
+  margin: 24px 0 8px;
+}
+.about-page p {
+  margin: 0 0 12px;
+  color: var(--text);
+}
+
 /* ---- Results ---- */
 
 /* ---- Impact Chart ---- */
