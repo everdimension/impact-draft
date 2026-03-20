@@ -3,6 +3,7 @@ import type { RawPRWithFiles } from "./api/github";
 import { analyzeAll } from "./analysis";
 import type { EngineerReport } from "./analysis/types";
 import { EngineerCard } from "./components/EngineerCard";
+import { ImpactChart } from "./components/ImpactChart";
 import cachedPRs from "./data/posthog-prs.json";
 import "./App.css";
 
@@ -33,6 +34,7 @@ function App() {
               evidence.
             </p>
           </div>
+          <ImpactChart reports={reports} />
           <div className="engineer-list">
             {reports.map((r: EngineerReport) => (
               <EngineerCard key={r.login} report={r} />

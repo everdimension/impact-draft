@@ -101,6 +101,10 @@ header h1 {
   margin: 0;
 }
 
+/* ---- Impact Chart ---- */
+.impact-chart { margin-bottom: 20px; }
+.impact-chart svg { display: block; width: 100%; height: auto; }
+
 /* ---- Engineer Card ---- */
 .engineer-card {
   border: 1px solid var(--border);
@@ -141,16 +145,35 @@ header h1 {
 .engineer-name:hover {
   text-decoration: underline;
 }
-.pr-breakdown {
-  display: flex;
-  gap: 10px;
+.pr-summary {
+  display: block;
   font-size: 13px;
+  color: var(--text);
   margin-top: 2px;
-  flex-wrap: wrap;
 }
-.pr-breakdown .total {
-  font-weight: 500;
+.metric-chips {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.metric-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.metric-value {
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
   color: var(--text-h);
+}
+.metric-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--text);
 }
 .expand-icon {
   font-size: 14px;
@@ -158,19 +181,6 @@ header h1 {
   flex-shrink: 0;
 }
 
-/* Category badges */
-.cat-feature {
-  color: #16a34a;
-}
-.cat-bugfix {
-  color: #dc2626;
-}
-.cat-refactor {
-  color: #2563eb;
-}
-.cat-other {
-  color: var(--text);
-}
 
 /* ---- Metric Sections ---- */
 .engineer-body {
@@ -339,6 +349,12 @@ h5 {
     width: 100%;
   }
   .section-summary {
+    display: none;
+  }
+  .metric-chips {
+    display: none;
+  }
+  .impact-chart {
     display: none;
   }
   .evidence-table {
