@@ -92,7 +92,7 @@ export function EngineerCard({ report }: { report: EngineerReport }) {
             <span className="metric-label">mod/PR</span>
           </div>
         </div>
-        <span className="expand-icon">{open ? "▾" : "▸"}</span>
+        <svg className="expand-icon" viewBox="0 0 16 16" width="16" height="16" style={{ transform: open ? "rotate(90deg)" : undefined, transition: "transform 0.15s" }}><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </button>
 
       {open && (
