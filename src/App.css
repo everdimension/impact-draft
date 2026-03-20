@@ -1,0 +1,135 @@
+.app {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+header {
+  margin-bottom: 32px;
+}
+
+header h1 {
+  font-size: 32px;
+  margin: 0 0 8px;
+}
+
+.subtitle {
+  color: var(--text);
+  font-size: 16px;
+}
+
+.subtitle a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.subtitle a:hover {
+  text-decoration: underline;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px 0;
+  color: var(--text);
+}
+
+.error {
+  text-align: center;
+  padding: 40px 0;
+  color: #e53e3e;
+}
+
+.stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 20px 24px;
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--text);
+  margin-top: 4px;
+}
+
+.contributors-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.contributors-table th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+  color: var(--text);
+  font-weight: 500;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.contributors-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortable:hover {
+  color: var(--text-h);
+}
+
+.rank-col {
+  width: 40px;
+  color: var(--text);
+}
+
+.num-col {
+  text-align: right;
+  width: 80px;
+}
+
+.bar-col {
+  width: 35%;
+}
+
+.contributor-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-h);
+  text-decoration: none;
+}
+
+.contributor-link:hover {
+  text-decoration: underline;
+}
+
+.avatar {
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+.bar {
+  height: 16px;
+  background: var(--accent);
+  border-radius: 3px;
+  opacity: 0.6;
+  min-width: 2px;
+}
