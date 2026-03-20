@@ -217,6 +217,11 @@ header h1 {
   border-radius: 2px;
   opacity: 0.85;
   min-width: 2px;
+  animation: bar-grow 0.3s ease-out;
+}
+@keyframes bar-grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 .chart-dash {
   position: absolute;

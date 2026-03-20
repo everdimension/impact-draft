@@ -12,11 +12,11 @@ const GRAY = "#9ca3af";
 function barStyle(ratio: number, maxRatio: number): CSSProperties {
   if (ratio <= 1) {
     const leftPct = ratio * 50;
-    return { left: `${leftPct}%`, width: `${50 - leftPct}%`, backgroundColor: AMBER };
+    return { left: `${leftPct}%`, width: `${50 - leftPct}%`, backgroundColor: AMBER, transformOrigin: "right center" };
   }
   const effectiveMax = maxRatio <= 1 ? 2 : maxRatio;
   const widthPct = ((ratio - 1) / (effectiveMax - 1)) * 50;
-  return { left: "50%", width: `${widthPct}%`, backgroundColor: GREEN };
+  return { left: "50%", width: `${widthPct}%`, backgroundColor: GREEN, transformOrigin: "left center" };
 }
 
 const isDesktop = () => window.matchMedia(WIDE_QUERY).matches;
