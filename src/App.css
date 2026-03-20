@@ -103,23 +103,107 @@ header h1 {
 
 /* ---- Impact Chart ---- */
 .impact-chart { margin-bottom: 20px; }
-.impact-chart svg {
+.chart-row {
+  display: flex;
+  align-items: center;
+  height: 30px;
+  gap: 8px;
+  padding: 0 4px;
+  border-radius: 4px;
+}
+.chart-row.row-highlight {
+  background: var(--code-bg);
+}
+.chart-avatar-spacer { width: 22px; flex-shrink: 0; }
+.chart-value-spacer { width: 38px; flex-shrink: 0; }
+.chart-axis-labels {
+  flex: 1;
+  position: relative;
+  height: 22px;
+}
+.chart-axis-label {
+  position: absolute;
+  top: 0;
+  font-size: 12px;
+  color: var(--text);
+  transform: translateX(-50%);
+}
+.chart-axis-center {
+  font-weight: 700;
+  color: var(--text-h);
+}
+.chart-avatar-group {
+  position: relative;
+  flex-shrink: 0;
+  width: 22px;
+}
+.chart-avatar {
   display: block;
-  width: 100%;
-  height: auto;
-  max-width: 600px;
+  border-radius: 50%;
 }
 .chart-tooltip {
+  position: absolute;
+  left: calc(100% + 6px);
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--text-h);
+  color: var(--bg);
+  font-size: 12px;
+  font-family: var(--mono);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.12s;
+  z-index: 1;
 }
 .chart-avatar-group:hover .chart-tooltip {
   opacity: 1;
 }
+.chart-bar-area {
+  flex: 1;
+  position: relative;
+  height: 20px;
+  background: var(--code-bg);
+  border-radius: 3px;
+}
+.chart-bar-area::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  border-left: 1px dashed var(--text);
+  opacity: 0.5;
+}
+.chart-bar {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  border-radius: 2px;
+  opacity: 0.85;
+  min-width: 2px;
+}
+.chart-dash {
+  position: absolute;
+  left: calc(50% - 4px);
+  top: calc(50% - 1px);
+  width: 8px;
+  height: 2px;
+  background: #9ca3af;
+  border-radius: 1px;
+}
+.chart-value {
+  flex-shrink: 0;
+  width: 38px;
+  text-align: right;
+  font-size: 12px;
+  font-family: var(--mono);
+}
 .chart-expand-btn {
   display: block;
-  max-width: 600px;
+  width: 100%;
   padding: 6px 0;
   margin-top: 4px;
   background: none;
@@ -143,9 +227,6 @@ header h1 {
 }
 .engineer-card.row-highlight {
   background: var(--code-bg);
-}
-.row-highlight > .chart-row-bg {
-  opacity: 0.07 !important;
 }
 .engineer-header {
   display: flex;
@@ -386,16 +467,9 @@ h5 {
     gap: 24px;
   }
   .impact-chart {
-    flex: 0 0 500px;
     position: sticky;
     top: 20px;
     margin-bottom: 0;
-  }
-  .impact-chart svg {
-    max-width: none;
-  }
-  .chart-expand-btn {
-    max-width: none;
   }
   .engineer-list {
     flex: 1;
