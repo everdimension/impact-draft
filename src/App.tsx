@@ -5,6 +5,7 @@ import { analyzeAll } from "./analysis";
 import type { EngineerReport } from "./analysis/types";
 import { EngineerCard } from "./components/EngineerCard";
 import { ImpactChart } from "./components/ImpactChart";
+import { SessionPage } from "./pages/SessionPage";
 import cachedPRs from "./data/posthog-prs.json";
 import "./App.css";
 
@@ -43,6 +44,7 @@ function App() {
       <nav className="navbar">
         <NavLink to="/" end className={({ isActive }) => `nav-link${isActive ? " nav-link-active" : ""}`}>Home</NavLink>
         <NavLink to="/about" className={({ isActive }) => `nav-link${isActive ? " nav-link-active" : ""}`}>About</NavLink>
+        <NavLink to="/session" className={({ isActive }) => `nav-link${isActive ? " nav-link-active" : ""}`}>Agent Session</NavLink>
       </nav>
       <Routes>
         <Route
@@ -110,6 +112,7 @@ function App() {
             </div>
           }
         />
+        <Route path="/session" element={<SessionPage />} />
       </Routes>
     </div>
   );

@@ -124,6 +124,27 @@ header h1 {
   color: var(--text);
 }
 
+/* ---- Session ---- */
+.session-page h1 {
+  font-size: 28px;
+  margin: 0 0 8px;
+}
+.session-page > p {
+  color: var(--text);
+  margin: 0 0 16px;
+}
+.session-page pre {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 16px;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre;
+  overflow-x: auto;
+  color: var(--text-h);
+}
+
 /* ---- Results ---- */
 
 /* ---- Impact Chart ---- */
